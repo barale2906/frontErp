@@ -7,6 +7,7 @@ import url from "../utils/urlimport";
 import mes6 from "../utils/Vence";
 import Facturar from "./Facturar";
 import FacturaUnitaria from "./FacturaUnitaria";
+import CotizaImprimir from "./CotizaImprimir"
 
 export default function LandingFactura(){
     const [lpactiva, setLpactiva] = useState()
@@ -82,7 +83,7 @@ export default function LandingFactura(){
     const inventario = async (compra) => {
         
         const rutainve=url+"inventario/"+sesionUser.bodega+"/"+compra.id
-        console.log(rutainve)
+        
           
         setCargado(compra)   
 
@@ -391,7 +392,7 @@ export default function LandingFactura(){
                         }                   
                         <div className="container text-center">                
                             <div className="row">
-                                <div className="col-sm-6">
+                                <div className="col-sm-6">  
                                     <div className="container text-center">
                                         <div className="alert alert-success" role="alert">
                                             <h5>Buscar Producto</h5>
@@ -492,6 +493,13 @@ export default function LandingFactura(){
                                                 </tbody>
                                             </table>
                                             <button className="btn btn-danger btn-sm" onClick={()=>eliminatodo()}>Eliminar Todo</button>
+                                            <CotizaImprimir 
+                                                comprados={comprados} 
+                                                totalFactura={totalFactura} 
+                                                descuentos={descuentos} 
+                                                impuestos={impuestos}
+                                                user = {sesionUser.name}
+                                            />
                                         </div> :
                                         <></>
                                     }
@@ -536,8 +544,13 @@ export default function LandingFactura(){
                                                                 </td>
                                                                 <td>{inv.lote}</td>
                                                                 <td>{inv.cantidad}</td>
-                                                                <td>                                        
-                                                                    <button className="btn btn-warning btn-sm" onClick={()=>cantidad(inv)}>Elegir</button>
+                                                                <td>
+                                                                    {
+                                                                        inv.cantidad>0 ?
+                                                                        <button className="btn btn-warning btn-sm" onClick={()=>cantidad(inv)}>Elegir</button> :
+                                                                        <span className="badge bg-danger">Sin Inventario</span>
+                                                                    }                                        
+                                                                    
                                                                 </td>
                                                             </tr>                                        
                                                         ))}
