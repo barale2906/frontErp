@@ -164,37 +164,46 @@ export default function TecnicaEditar({editTecnica}) {
         />
         {errors.valor && <p className="text-danger">{errors.valor.message}</p>}
 
-        <label htmlFor="transportadora" className="form-label">Transportadora:</label>
-        <input          
-          name="transportadora"
-          type="text"
-          placeholder="Transportadora que trajo los medicamentos"
-          className={`form-control ${errors.transportadora && "error" }`}        
-          {...register("transportadora", {
-            required: messages.required,
-            pattern: {
-              value: patterns.transportadora,
-              message: messages.transportadora
-            }
-          })}
-        />
-        {errors.transportadora && <p className="text-danger">{errors.transportadora.message}</p>}
-  
-        <label htmlFor="embalaje" className="form-label">Embalaje:</label>
-        <input
-          name="embalaje"
-          type="textarea"
-          placeholder="Descripcción de la línea de Producto"
-          className={`form-control ${errors.embalaje && "error"}`}
-          {...register("embalaje", {
-            required: messages.required,
-            pattern: {
-              value: patterns.embalaje,
-              message: messages.embalaje
-            }
-          })}
-        />
-        {errors.embalaje && <p className="text-danger">{errors.embalaje.message}</p>}
+        {
+          editTecnica?.tipo===1 ? 
+          <>
+            <label htmlFor="transportadora" className="form-label">Transportadora:</label>
+            <input          
+              name="transportadora"
+              type="text"
+              placeholder="Transportadora que trajo los medicamentos"
+              className={`form-control ${errors.transportadora && "error" }`}        
+              {...register("transportadora", {
+                required: messages.required,
+                pattern: {
+                  value: patterns.transportadora,
+                  message: messages.transportadora
+                }
+              })}
+            />
+            {errors.transportadora && <p className="text-danger">{errors.transportadora.message}</p>}
+      
+            <label htmlFor="embalaje" className="form-label">Embalaje:</label>
+            <input
+              name="embalaje"
+              type="textarea"
+              placeholder="Descripcción de la línea de Producto"
+              className={`form-control ${errors.embalaje && "error"}`}
+              {...register("embalaje", {
+                required: messages.required,
+                pattern: {
+                  value: patterns.embalaje,
+                  message: messages.embalaje
+                }
+              })}
+            />
+            {errors.embalaje && <p className="text-danger">{errors.embalaje.message}</p>}
+          </>
+          :
+          <>
+          </>
+        }
+        
 
         <input
             name="userId"
@@ -202,6 +211,13 @@ export default function TecnicaEditar({editTecnica}) {
             {...register("userId")}
             defaultValue={sesionUser.id}
         />
+
+        <input
+          name="tipo"
+          type="hidden"                                    
+          {...register("tipo")}
+          defaultValue={editTecnica?.tipo}
+      />
   
         
         <div className="modal-footer">

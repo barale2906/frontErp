@@ -41,6 +41,7 @@ export default function TecnicaDetaProductos(){
         await axios.get(ruta)
         .then((res)=>{                 
             setSeleccionado(res.data); 
+            window.sessionStorage.setItem("tipo", res.data.tipo)
             
         })
         .catch((error)=>{
@@ -191,9 +192,9 @@ export default function TecnicaDetaProductos(){
                                 seleccionado.status===3 ?
                                 <p><button className="btn btn-danger btn-sm">DESAPROBADA</button></p>  :
                                 <></>
-                            }
+                            }                            
                             {
-                                seleccionado.status>1 ?
+                                seleccionado.status>1 && productoSel?
                                     <>
                                         <TecnicaImprimir
                                             seleccionado={seleccionado}
@@ -231,13 +232,20 @@ export default function TecnicaDetaProductos(){
                         <Link to={"/tecnicas"}><button type="button" className="btn btn-warning btn-sm" >REGRESAR</button></Link> 
                     </div>                
                 </div>  
+                {
+                    seleccionado.status===1 ? 
+                    <>
+                    <div className="container text-center col-sm-10">
+                        <div className="alert alert-success" role="alert">
+                            <h5>Cargar Producto</h5>
+                            <input value={busca} onChange={handleChange} type="text" placeholder='Buscar producto' className='form-control'/>
+                        </div>                            
+                    </div>
+                    </>
+                    :
+                    <></>
+                }
                 
-                <div className="container text-center col-sm-10">
-                    <div className="alert alert-success" role="alert">
-                        <h5>Cargar Producto</h5>
-                        <input value={busca} onChange={handleChange} type="text" placeholder='Buscar producto' className='form-control'/>
-                    </div>                            
-                </div>
                         
                 <div className="row">
                     { busca ?
@@ -286,8 +294,15 @@ export default function TecnicaDetaProductos(){
                                         <thead>
                                             <tr>                                        
                                                 <th scope="col"><small>NOMBRE COMERCIAL</small></th>
-                                                <th scope="col"><small>LOTE</small></th>
-                                                <th scope="col"><small>VENCIMIENTO</small></th>
+                                                {
+                                                    seleccionado.tipo===2 ? 
+                                                        <></>
+                                                        :
+                                                        <>
+                                                            <th scope="col"><small>LOTE</small></th>
+                                                            <th scope="col"><small>VENCIMIENTO</small></th>
+                                                        </>
+                                                }                                                
                                                 <th scope="col"><small>CANT</small></th>
                                                 <th scope="col"><small>UNIDAD</small></th>
                                                 <th scope="col"><small>COSTO</small></th>
@@ -298,8 +313,15 @@ export default function TecnicaDetaProductos(){
                                             {productoSel.map((productose, index)=>(                                        
                                                 <tr key={productose.id}>
                                                     <td><small>{productose.producto.comercial}</small></td>
-                                                    <td><small>{productose.lote}</small></td>
-                                                    <td><small>{productose.expiration}</small></td>
+                                                    {
+                                                        seleccionado.tipo===2 ?
+                                                            <></>
+                                                            :
+                                                            <>
+                                                                <td><small>{productose.lote}</small></td>
+                                                                <td><small>{productose.expiration}</small></td>       
+                                                            </>
+                                                    }                                                    
                                                     <td><small>{productose.cantidad}</small></td>
                                                     <td><small>{productose.producto.unit}</small></td>
                                                     <td><small>$ {productose.costo}</small></td>

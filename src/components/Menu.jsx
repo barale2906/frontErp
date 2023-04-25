@@ -32,7 +32,7 @@ export default function Menu(){
                                     INVENTARIOS
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li><NavLink className="dropdown-item" to="/tecnicas">Recepción Técnica</NavLink></li>
+                                    <li><NavLink className="dropdown-item" to="/tecnicas">Recepción </NavLink></li>
                                     <li><NavLink className="dropdown-item" to="/ambientalreg">Ambientales</NavLink></li>
                                     <li><NavLink className="dropdown-item" to="/inventarios">Inventario</NavLink></li>
                                     <li><hr className="dropdown-divider"/></li>

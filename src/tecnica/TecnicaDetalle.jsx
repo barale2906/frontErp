@@ -98,6 +98,16 @@ export default function TecnicaDetalle({tecnica, setEditTecnica}){
                 <td><small>{"$ "+ new Intl.NumberFormat().format(tecnica.valor)}</small></td>
                 <td><small>{tecnica.embalaje}</small></td>
                 <td><small>{tecnica.transportadora}</small></td>
+                {
+                    tecnica.tipo===1 ? 
+                    <>
+                        <td><small>Técnica</small></td>
+                    </>
+                    :
+                    <>
+                        <td><small>Ordinaria</small></td>
+                    </>
+                }                
                 <td>
                     <div className="btn-group" role="group" aria-label="Basic mixed styles example">                        
                         {tecnica.status===1 ? 

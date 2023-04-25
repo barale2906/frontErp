@@ -18,10 +18,10 @@ const messages = {
     
   };
   
-export default function ProductoCrear() {
+export default function ProductoCrear({siguienteId}) {
 
   const [lineas, setLineas] = useState([]);
-  const [impuestos, setImpuestos] = useState([]); 
+  const [impuestos, setImpuestos] = useState([]);
 
   // Seleccionar Lineas de producto
   const axiosLinea = async () => {
@@ -54,6 +54,7 @@ export default function ProductoCrear() {
       })
   };
 
+  
   
 
   useEffect(()=>{
@@ -104,9 +105,7 @@ export default function ProductoCrear() {
       }
     }).catch((error)=>{
       console.log(error)
-  })
-      
-     
+    });     
   }
 
   const creaProducto = async (productoInfo) =>{
@@ -332,7 +331,7 @@ export default function ProductoCrear() {
       {errors.impId && <p className="text-danger">{errors.impId.message}</p>}
 
 
-      <label htmlFor="code" className="form-label">Código:</label>
+      <label htmlFor="code" className="form-label">Código: <span className="text-warning">Siguient ID: {siguienteId}</span></label>
       <input          
         name="code"
         type="text"

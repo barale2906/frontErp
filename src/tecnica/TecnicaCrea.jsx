@@ -20,8 +20,15 @@ const patterns = {
 export default function TecnicaCrea() {
 
   const [proveedors, setProveedors] = useState([]);
+  const [tipo, setTipo]=useState();
+  const [control, setControl]=useState();
 
-  const {sesionUser} = useContext(UserContext)
+  const {sesionUser} = useContext(UserContext);
+  
+  const onChange = e=>{  
+    setTipo(e.target.value) 
+    setControl(e.target.value)       
+}
 
   // Seleccionar proveedores
   const axiosProveedor = async () => {
@@ -49,6 +56,8 @@ export default function TecnicaCrea() {
       proveeId:'',
       transportadora:'',
       factura:'',
+      valor:'',
+      tipo:'',
       embalaje:''
   } 
 
@@ -61,9 +70,20 @@ export default function TecnicaCrea() {
 
 
   const onSubmit = async (tecnicaInfo) => {
+      //console.log(tecnicaInfo)
+      const info = {
+        fecha           : tecnicaInfo.fecha,
+        proveeId        : tecnicaInfo.proveeId,
+        factura         : tecnicaInfo.factura,
+        valor           : tecnicaInfo.valor,
+        transportadora  : tecnicaInfo.transportadora,
+        embalaje        : tecnicaInfo.embalaje,
+        tipo            : tipo,
+        observaciones   : tecnicaInfo.observaciones,
+        userId          : tecnicaInfo.userId
+      }
       
-      
-      axios.post(ruta, tecnicaInfo)
+       axios.post(ruta, info)
           .then((response) =>{
               if(response.status ===201){
                   
@@ -84,129 +104,158 @@ export default function TecnicaCrea() {
                       'error'
                   )
                   }
-          })  
+          })   
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <label htmlFor="fecha" className="form-label">Fecha de Recepción:</label>
-      <input          
-        name="fecha"
-        type="date"
-        className={`form-control ${errors.fecha && "error" }`}        
-        {...register("fecha", {
-          required: messages.required,
-          pattern: {
-            value: patterns.fecha,
-            message: messages.fecha
-          }
-        })}
-      />
-      {errors.fecha && <p className="text-danger">{errors.fecha.message}</p>}
 
-      <label htmlFor="proveeId" className="form-label">Seleccione Proveedor</label>
-      <select          
-          name="proveeId"                                
-          className={`form-control ${errors.proveeId && "error" }`}        
-          {...register("proveeId", {
-              required: messages.required,
-              pattern: {
-              value: patterns.proveeId,
-              message: messages.proveeId
-              }
-          })}
-      >                                
+      <label htmlFor="tipo" className="form-label">Seleccione tipo de Recepción</label>
+      <select name="tipo" value={tipo} onChange={onChange} className={`form-control ${errors.tipo && "error" }`}>                                
           <option value=""></option>
-          {proveedors.map((proveedor)=>(                                        
-              <option value={proveedor.id} key={proveedor.id}>{proveedor.name}</option>                                     
-          ))}
+          <option value="1">Recepción Técnica</option>
+          <option value="2">Recepción Ordinaria</option>
+          
       </select>
-      {errors.proveeId && <p className="text-danger">{errors.proveeId.message}</p>}
+      {errors.tipo && <p className="text-danger">{errors.tipo.message}</p>}
+
+    {
+      tipo ? 
+        <>
+            <label htmlFor="fecha" className="form-label">Fecha de Recepción:</label>
+            <input          
+              name="fecha"
+              type="date"
+              className={`form-control ${errors.fecha && "error" }`}        
+              {...register("fecha", {
+                required: messages.required,
+                pattern: {
+                  value: patterns.fecha,
+                  message: messages.fecha
+                }
+              })}
+            />
+            {errors.fecha && <p className="text-danger">{errors.fecha.message}</p>}
+
+            <label htmlFor="proveeId" className="form-label">Seleccione Proveedor</label>
+            <select          
+                name="proveeId"                                
+                className={`form-control ${errors.proveeId && "error" }`}        
+                {...register("proveeId", {
+                    required: messages.required,
+                    pattern: {
+                    value: patterns.proveeId,
+                    message: messages.proveeId
+                    }
+                })}
+            >                                
+                <option value=""></option>
+                {proveedors.map((proveedor)=>(                                        
+                    <option value={proveedor.id} key={proveedor.id}>{proveedor.name}</option>                                     
+                ))}
+            </select>
+            {errors.proveeId && <p className="text-danger">{errors.proveeId.message}</p>}
 
 
-      <label htmlFor="factura" className="form-label">Factura:</label>
-      <input          
-        name="factura"
-        type="text"
-        placeholder="Número de factura con que se recibe el pedido"
-        className={`form-control ${errors.factura && "error" }`}        
-        {...register("factura", {
-          required: messages.required,
-          pattern: {
-            value: patterns.factura,
-            message: messages.factura
-          }
-        })}
-      />
-      {errors.factura && <p className="text-danger">{errors.factura.message}</p>}
+            <label htmlFor="factura" className="form-label">Factura:</label>
+            <input          
+              name="factura"
+              type="text"
+              placeholder="Número de factura con que se recibe el pedido"
+              className={`form-control ${errors.factura && "error" }`}        
+              {...register("factura", {
+                required: messages.required,
+                pattern: {
+                  value: patterns.factura,
+                  message: messages.factura
+                }
+              })}
+            />
+            {errors.factura && <p className="text-danger">{errors.factura.message}</p>}
 
-      <label htmlFor="valor" className="form-label">Valor Factura:</label>
-      <input          
-        name="valor"
-        type="text"
-        placeholder="Valor total de la factura."
-        className={`form-control ${errors.valor && "error" }`}        
-        {...register("valor", {
-          required: messages.required,
-          pattern: {
-            value: patterns.valor,
-            message: messages.valor
-          }
-        })}
-      />
-      {errors.valor && <p className="text-danger">{errors.valor.message}</p>}
+            <label htmlFor="valor" className="form-label">Valor Factura:</label>
+            <input          
+              name="valor"
+              type="text"
+              placeholder="Valor total de la factura."
+              className={`form-control ${errors.valor && "error" }`}        
+              {...register("valor", {
+                required: messages.required,
+                pattern: {
+                  value: patterns.valor,
+                  message: messages.valor
+                }
+              })}
+            />
+            {errors.valor && <p className="text-danger">{errors.valor.message}</p>}
 
-      <label htmlFor="transportadora" className="form-label">Transportadora:</label>
-      <input          
-        name="transportadora"
-        type="text"
-        placeholder="Transportadora que trajo los medicamentos"
-        className={`form-control ${errors.transportadora && "error" }`}        
-        {...register("transportadora", {
-          required: messages.required,
-          pattern: {
-            value: patterns.transportadora,
-            message: messages.transportadora
-          }
-        })}
-      />
-      {errors.transportadora && <p className="text-danger">{errors.transportadora.message}</p>}
+            {
+              control==="1" ? 
+                <>
+                  <label htmlFor="transportadora" className="form-label">Transportadora:</label>
+                  <input          
+                    name="transportadora"
+                    type="text"
+                    placeholder="Transportadora que trajo los medicamentos"
+                    className={`form-control ${errors.transportadora && "error" }`}        
+                    {...register("transportadora", {
+                      required: messages.required,
+                      pattern: {
+                        value: patterns.transportadora,
+                        message: messages.transportadora
+                      }
+                    })}
+                  />
+                  {errors.transportadora && <p className="text-danger">{errors.transportadora.message}</p>}
 
-      <label htmlFor="embalaje" className="form-label">Embalaje:</label>
-      <input
-        name="embalaje"
-        type="textarea"
-        placeholder="Estado de los empaques"
-        className={`form-control ${errors.embalaje && "error"}`}
-        {...register("embalaje", {
-          required: messages.required,
-          pattern: {
-            value: patterns.embalaje,
-            message: messages.embalaje
-          }
-        })}
-      />
-      {errors.embalaje && <p className="text-danger">{errors.embalaje.message}</p>}
+                  <label htmlFor="embalaje" className="form-label">Embalaje:</label>
+                  <input
+                    name="embalaje"
+                    type="textarea"
+                    placeholder="Estado de los empaques"
+                    className={`form-control ${errors.embalaje && "error"}`}
+                    {...register("embalaje", {
+                      required: messages.required,
+                      pattern: {
+                        value: patterns.embalaje,
+                        message: messages.embalaje
+                      }
+                    })}
+                  />
+                  {errors.embalaje && <p className="text-danger">{errors.embalaje.message}</p>}
+                </>
+                :
+                <></>
+            }
+            
 
-      <input
-          name="userId"
-          type="hidden"                                    
-          {...register("userId")}
-          defaultValue={sesionUser.id}
-      />
+            <input
+                name="userId"
+                type="hidden"                                    
+                {...register("userId")}
+                defaultValue={sesionUser.id}
+            />
 
-      <input
-        name="observaciones"
-        type="hidden"                                    
-        {...register("observaciones")}
-        defaultValue="Proceso de recepción"
-      />
 
+            <input
+              name="observaciones"
+              type="hidden"                                    
+              {...register("observaciones")}
+              defaultValue="Proceso de recepción"
+            />
+
+            
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" className="btn btn-info">Crear</button>
+            </div>
+        </>
+        :
+        <>
+          <h4>Selecciona el tipo de recepción que vas a cargar</h4>
+        </>
+    }
       
-      <div className="modal-footer">
-        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="submit" className="btn btn-info">Crear</button>
-      </div>
 
     </form>
   );

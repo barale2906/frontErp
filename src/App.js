@@ -61,7 +61,7 @@ export default function App(){
               <Route element={<ProtectedRoute  isAllowed={!!sesionUser} />}>
                 <Route path="/dashboard" element={<LandingFactura/>}/>
                 <Route path="/ambientalreg" element={<AmbientalLanding/>}/>
-                <Route path="/tecnicas" element={<TecnicaLanding/>}/>
+                <Route path="/tecnicas" element={<TecnicaLanding />}/>
                 <Route path="/tecnicas/:id" element={<TecnicaDetaProductos/>}/>
                 <Route path="/tecnicas/cargar" element={<TecnicaNavigate/>}/>
                 <Route path="/restringido" element={<Restringido/>}/>

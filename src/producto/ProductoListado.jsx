@@ -9,13 +9,15 @@ import ProductoCrear from "./ProductoCrea";
 import UserContext from "../providers/sesion/UserContext";
 import Paginacion from "../components/Paginacion";
 import BuscaProductos from "../components/BuscaProductos";
+import axios from "axios";
 
 
 export default function ProductoListado(){
 
     //Modificar productos
     const [editProducto, setEditProducto]=useState(null);
-    const {productos, cargaproductos} = useContext(UserContext);
+    const {productos, cargaproductos} = useContext(UserContext);    
+    const [siguienteId, setSiguienteId] = useState(); 
     
     //Parámetros de busqueda.
     const [buscados, setBuscados] = useState();
@@ -23,6 +25,22 @@ export default function ProductoListado(){
     useEffect(()=>{      
         cargaproductos()
     }, [])
+
+    // Seleccionar máximo ID
+    const axiosMaxId = async () =>{
+        const rutap = url+"producto/1/max"
+            await axios.get(rutap)
+            .then((res)=>{                
+            setSiguienteId(res.data+1);
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+    }
+
+    useEffect(()=>{
+        axiosMaxId()
+    }, [cargaproductos])
 
     
     //parámetros de paginación productos
@@ -55,11 +73,11 @@ export default function ProductoListado(){
                             <div className="modal-dialog">
                                 <div className="modal-content">
                                     <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel">Crear Producto</h5>
+                                        <h5 className="modal-title" id="exampleModalLabel">Crear Producto </h5>
                                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div className="modal-body">
-                                        <ProductoCrear/>
+                                        <ProductoCrear siguienteId={siguienteId}/>
                                     </div>                                    
                                 </div>
                             </div>
@@ -83,11 +101,11 @@ export default function ProductoListado(){
                                 <div className="modal-dialog">
                                     <div className="modal-content">
                                         <div className="modal-header">
-                                            <h5 className="modal-title" id="exampleModalLabel">Crear Producto</h5>
+                                            <h5 className="modal-title" id="exampleModalLabel">Crear Producto {siguienteId}</h5>
                                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div className="modal-body">
-                                            <ProductoCrear/>
+                                            <ProductoCrear siguienteId={siguienteId}/>
                                         </div>                                    
                                     </div>
                                 </div>
