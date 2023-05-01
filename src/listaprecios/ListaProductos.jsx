@@ -19,7 +19,7 @@ export default function ListaProductos(){
         await axios.get(ruta)
         .then((res)=>{                 
             setSeleccionado(res.data);
-            
+            window.sessionStorage.setItem("bodegaId", res.data.bodegaId)            
         })
         .catch((error)=>{
             console.log(error)

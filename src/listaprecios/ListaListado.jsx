@@ -20,15 +20,16 @@ export default function ListaListado(){
     
     // Consulta para mostrar los listas
     const axiosLista = async () => {
-      await axios.get(ruta)
-      .then((res)=>{
+        await axios.get(ruta)
+        .then((res)=>{
+            
+            setListas(res.data);
+            window.sessionStorage.removeItem("bodegaId")
         
-        setListas(res.data);
-        
-      })
-      .catch((error)=>{
-        console.log(error)
-      })
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
     };
 
     //parámetros de paginación 
@@ -117,6 +118,7 @@ export default function ListaListado(){
                                         <th scope="col">INICIA</th>
                                         <th scope="col">FINALIZA</th>
                                         <th scope="col">BODEGA</th>
+                                        <th scope="col">TIPO</th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>

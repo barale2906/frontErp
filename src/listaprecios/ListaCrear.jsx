@@ -25,7 +25,8 @@ export default function ListaCrear(){
         name:'',
         vigencia:'',
         description:'',
-        bodegaId:''
+        bodegaId:'',
+        tipo:''
     } 
 
     // Seleccionar bodegas
@@ -80,10 +81,27 @@ export default function ListaCrear(){
                     }
             })  
     }   
-  
-  
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
+
+            <label htmlFor="tipo" className="form-label">Tipo de lista a Crear</label>
+            <select          
+                name="tipo"                                
+                className={`form-control ${errors.tipo && "error" }`}        
+                {...register("tipo", {
+                    required: messages.required,
+                    pattern: {
+                    value: patterns.tipo,
+                    message: messages.tipo
+                    }
+                })}
+            >                                
+                <option value=""></option>
+                <option value="1">Público</option>
+                <option value="2">Coworking</option>
+            </select>
+            {errors.tipo && <p className="text-danger">{errors.tipo.message}</p>}
             
             <label htmlFor="name" className="form-label">Nombre de la lista:</label>
             <input          

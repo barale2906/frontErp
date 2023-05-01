@@ -50,6 +50,8 @@ export default function Menu(){
                                 <ul className="dropdown-menu">                                    
                                     <li><NavLink className="dropdown-item" to="/facturaslista">Lista de Facturas</NavLink></li>
                                     <li><hr className="dropdown-divider"/></li>
+                                    <li><NavLink className="dropdown-item" to="/coworking">Coworking</NavLink></li>
+                                    <li><hr className="dropdown-divider"/></li>
                                     <li><NavLink className="dropdown-item" to="/impuestos">Impuestos</NavLink></li>
                                     <li><NavLink className="dropdown-item" to="/listaprecios">Definir Lista de Precios</NavLink></li>
                                     <li><NavLink className="dropdown-item" to="/efectivo">Efectivo</NavLink></li>

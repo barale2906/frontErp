@@ -35,27 +35,27 @@ export default function ListaDetalle({lista, setEditLista}){
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: '¡Si, estoy seguro!'
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
 
-               axios.delete(ruta).then((response) =>{
-                   if(response.status ===200){
+                axios.delete(ruta).then((response) =>{
+                    if(response.status ===200){
                         Swal.fire(
                             '¡El estado cambio!',
                             'El Listado ha sido modificado correctamente',
                             'success'
                         )
                         alerta();
-                   } else {
-                       Swal.fire(
-                           '¡Error!',
-                           'Hubo un problema al desactivar El Listado',
-                           'error'
-                       )
-                   }
-               })              
+                    } else {
+                        Swal.fire(
+                            '¡Error!',
+                            'Hubo un problema al desactivar El Listado',
+                            'error'
+                        )
+                    }
+                })              
             }
-          })
+        })
     }
     
     const reutilizarlista = async ()=>{
@@ -96,7 +96,7 @@ export default function ListaDetalle({lista, setEditLista}){
             title: `<h1>REUTILIZAR LISTA</h1><p>Registra el % de aumento o descuento sobre la lista de precios: ${lista.name}</p>`,
             input: 'text',
             inputAttributes: {
-              autocapitalize: 'off'
+                autocapitalize: 'off'
             },
             showCancelButton: true,
             confirmButtonText: 'Reulizar Lista<br>Tardará algunos minutos',
@@ -163,7 +163,7 @@ export default function ListaDetalle({lista, setEditLista}){
                 }) 
             },
             allowOutsideClick: () => !Swal.isLoading()
-          })        
+        })        
     }
     
     return(   
@@ -174,6 +174,16 @@ export default function ListaDetalle({lista, setEditLista}){
                 <td>{lista.inicia}</td>
                 <td>{lista.fin}</td>
                 <td>{lista.bodega.name}</td>
+                <td>
+                    {
+                        lista.tipo===1?
+                        <p>Público</p>
+                        :
+                        <p>
+                            Coworking
+                        </p>
+                    }
+                </td>
                 <td>
                     <div className="btn-group" role="group" aria-label="Basic mixed styles example">
                         {lista.status===1 ? 

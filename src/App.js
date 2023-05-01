@@ -36,6 +36,7 @@ import LandingUser from "./users/LandingUser";
 import Login from "./users/Login";
 import MiCuenta from "./users/MiCuenta";
 import Roles from "./users/Roles";
+import FacturaCoworking from "./facturacion/FacturaCoworking";
 
 
 
@@ -60,6 +61,7 @@ export default function App(){
               
               <Route element={<ProtectedRoute  isAllowed={!!sesionUser} />}>
                 <Route path="/dashboard" element={<LandingFactura/>}/>
+                <Route path="/coworking" element={<FacturaCoworking/>}/>
                 <Route path="/ambientalreg" element={<AmbientalLanding/>}/>
                 <Route path="/tecnicas" element={<TecnicaLanding />}/>
                 <Route path="/tecnicas/:id" element={<TecnicaDetaProductos/>}/>

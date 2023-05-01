@@ -18,9 +18,11 @@ const patterns = {
 export default function CargaProducto (){
     const {id} = useParams()
     const idprod = window.sessionStorage.getItem("IdProd")
+    const bodegaId = window.sessionStorage.getItem("bodegaId")
     const rutaps = url+"producto/"+idprod
     const alerta = useContext(AlertaContext)
     const [elegido, setElegido] = useState()
+    const [costo,setCosto] = useState([])
     let navegar = useNavigate()
     const [precio, setPrecio] = useState()
     const [descuento, setDescuento] = useState()
@@ -34,6 +36,7 @@ export default function CargaProducto (){
     const volver = ()=>{
         window.sessionStorage.removeItem("IdProd")
         setElegido()
+        setCosto()
         navegar("/listaprecios/"+id)
     }
 
@@ -49,13 +52,32 @@ export default function CargaProducto (){
         })
     }; 
 
+    //Seleccionar último precio de compra
+    const obtenerCosto = async () => {
+        
+        const rutadeta=url+"tecnicadetalle/"+bodegaId+"/"+idprod       
+        
+        await axios.get(rutadeta)
+        .then((res)=>{
+            if(res.status===201){
+                setCosto(res.data)
+            }else{
+                setCosto("")
+            }            
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+    };
+
+    
     // Verificar existencia en lista actual
     const axiosutil = async () => {
         const rutaveri = url+"listaprecio/"+id+"/"+idprod
         
         await axios.get(rutaveri)
         .then((res)=>{                 
-            if(res.status ===201){
+            if(res.status===201){
                 setUtil(2)
             }                            
         })
@@ -77,11 +99,13 @@ export default function CargaProducto (){
         handleSubmit,
         formState: { errors },
         reset 
-    } = useForm({mode:'onblur'});    
-     
+    } = useForm({mode:'onblur'});   
+
+
     useEffect(()=>{
         axiosProductoSel()
         axiosutil()
+        obtenerCosto()
     }, [idprod])
 
     const onSubmit = async () => {
@@ -111,51 +135,66 @@ export default function CargaProducto (){
         const rutalp = url+"listaprecio"
         
         Swal.fire({
-          title: '¿Estas Seguro?',
-          text: `¿Quieres agregar: ${elegido.generico}?`,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: '¡Si, estoy seguro!'
+            title: '¿Estas Seguro?',
+            text: `¿Quieres agregar: ${elegido.generico}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '¡Si, estoy seguro!'
         }).then((result) => {
-          if (result.isConfirmed) {
+            if (result.isConfirmed) {
       
-             axios.post(rutalp, datosMod)
-                .then((response) =>{
-                 if(response.status ===201){
-                      Swal.fire(
-                          '¡AGREGO EL PRODUCTO A LA LISTA DE PRECIOS!',
-                          `¡Se anexo satisfactoriamente el producto: ${elegido.generico}?`,
-                          'success'
-                      )
-                      setPrecio("")
-                      setDescuento("")                      
-                      reset(vacio)
-                      alerta();
-                      volver()
-                 } else {
-                     Swal.fire(
-                         '¡Error!',
-                         'Hubo un problema al modificar la lista',
-                         'error'
-                     )
-                 }
-             })
-      
+                axios.post(rutalp, datosMod)
+                    .then((response) =>{
+                    if(response.status ===201){
+                        Swal.fire(
+                            '¡AGREGO EL PRODUCTO A LA LISTA DE PRECIOS!',
+                            `¡Se anexo satisfactoriamente el producto: ${elegido.generico}?`,
+                            'success'
+                        )
+                        setPrecio("")
+                        setDescuento("")                      
+                        reset(vacio)
+                        alerta();
+                        volver()
+                    } else {
+                        Swal.fire(
+                            '¡Error!',
+                            'Hubo un problema al modificar la lista',
+                            'error'
+                        )
+                    }
+                })
+
             
-          }
+            }
         })
     }
 
+    
     if(elegido)
     return (
         <>
             <div className="alert alert-primary" role="alert">
                 <h5 className="modal-title" id="staticBackdropLabel">
-                    Comercial: <strong>{elegido.comercial}</strong>  Generico: <strong>{elegido.generico} </strong> 
-                    CUM: <strong>{elegido.cum}</strong> Unidad: <strong>{elegido.unit} </strong>
-                    Descripción: <strong>{elegido.description}</strong>
+                    <p>Comercial: <strong>{elegido.comercial}</strong>  Generico: <strong>{elegido.generico} </strong> </p>
+                    <p>CUM: <strong>{elegido.cum}</strong> Unidad: <strong>{elegido.unit} </strong></p>
+                    <p>Descripción: <strong>{elegido.description} </strong></p>
+                    Costo Vigente: 
+                    {
+                        costo.length>0?
+                        <>
+                            {costo.map((cost, index)=>(                                        
+                                <p>Fecha: <strong key={index}>{cost.createdAt}</strong> Valor Compra: <strong>{"$ "+ new Intl.NumberFormat().format(cost.costo)}</strong></p>
+                            ))}
+                        </>
+                        :
+                        <>
+                            <strong> No hay registro de compra reciente de este producto</strong>
+                        </>
+                    }
+                    
                 </h5>
                 <button onClick={volver} className="btn btn-primary">Volver</button>
             </div>
