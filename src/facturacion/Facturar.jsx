@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect} from "react";
+import { useContext, useEffect, useState} from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import UserContext from "../providers/sesion/UserContext";
@@ -20,6 +20,12 @@ const patterns = {
 export default function Facturar({comprados,impuestos, descuentos, totalFactura, setGenFactura, setLastFactura}){
 
     const {sesionUser} = useContext(UserContext)
+    const [usuarios, setUsuarios] = useState([])    
+    const [busca, setBusca] = useState()
+    const [buscados, setBuscados] = useState()
+    const [elegido, setElegido]= useState()    
+    const [form, setForm]=useState() 
+    const [productoMembresia, setProductoMembresia] = useState([])
     const ruta = url+"facturaEncabezado"
     const rutadet = url+"facturaDetalle"
     const rutasaldo=url+"efectivo/"+sesionUser.bodega
@@ -28,23 +34,171 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
     let listaDet={}
     let listainfo
     let key
-    let status = 2
+    let status = 2 
+    let totalFact = 0;
+    let impuest = 0;
+    let descuen = 0;
+    let productos = [];
+
+    
+    // Seleccionar Usuarios cargados
+    const axiosUsuariosCarga = async()=>{
+        const ruta=url+"membresiaUsuario"        
+        await axios.get(ruta)
+        .then((res)=>{                 
+            setUsuarios(res.data)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+    }
+
+    // carga datos a buscar
+    const handleChange=e=>{
+        setBusca(e.target.value);
+        filtrar(e.target.value)
+    }
+
+    // Carga usuarios enconstrados según parámetros
+    const filtrar=(terminoBusqueda)=>{
+        const resultadosBusqueda=usuarios?.filter((elemento)=>{
+            if(elemento.name?.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+                || elemento.documento?.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())            
+            ){
+                return elemento;
+            }
+        });
+        setBuscados(resultadosBusqueda);
+    }
 
     const {
         register,
         handleSubmit,
         formState: { errors },
         reset,
-        setFocus    
+        //setFocus    
     } = useForm({mode:'onblur'});
 
+    const elegir = (buscado)=>{
+        setElegido(buscado)
+        setBusca()
+    }
 
-    const onSubmit = async (listaInfo) => {  
-        console.log(listaInfo)
-        axios.post(ruta, listaInfo)
+    useEffect(()=>{
+        reset(elegido)
+        setProductoMembresia([])
+        setForm(1)
+    }, [elegido])
+
+    //Verificar productos según membresia
+    const buscarproductos = async(listaInfo)=>{
+        if(elegido){
+            verificaMembresia(listaInfo)
+        }else{
+            onSubmit(listaInfo,listaInfo.formaPago,comprados)
+        }
+    } 
+
+    //Verificar productos según membresia
+    const verificaMembresia = async(listaInfo)=>{        
+
+        comprados.forEach(function(elemento, indice) {
+            const rutamem = url+"membresiaProducto/"+elegido.membreEncaId+"/"+elemento.prodId
+
+            axios.get(rutamem)
+                .then((response) =>{
+                    if(response.data!=null){                        
+                        //1. Cargar los productos con su descuento, impuestos, total
+                        const porcentaje = response.data.percentage
+
+                        const descuento = elemento.precio*porcentaje/100
+                        const descuentobase = descuento*elemento.cantidad
+                        const impuesto = (elemento.precio-descuento)*elemento.impuestoporc/100
+                        const impuestobase = impuesto*elemento.cantidad
+                        const total=(elemento.precio-descuento)+impuesto
+                        const totalbase = total*elemento.cantidad
+
+                        const nuevoElemento={
+                            "cantidad":elemento.cantidad,
+                            "comercial":elemento.comercial,
+                            "descuento":descuento,
+                            "descuentobase":descuentobase,
+                            "expiration":elemento.expiration,
+                            "id":elemento.id,
+                            "impuesto":impuesto,
+                            "impuestobase":impuestobase,
+                            "impuestoporc":elemento.impuestoporc,
+                            "invId":elemento.invId,
+                            "lote":elemento.lote,
+                            "lpId":elemento.lpId,
+                            "precio":elemento.precio,
+                            "preciobase":elemento.preciobase,
+                            "prodId":elemento.prodId,
+                            "saldo":elemento.saldo,
+                            "total":total,
+                            "totalbase":totalbase
+                            
+                        }
+                        const items = [nuevoElemento, ...productos];
+                        productos=items
+                        console.log("itemes Cargados: ",productos)
+                        //totalizar(nuevoElemento,totalbase,impuestobase,descuentobase)
+                        window.sessionStorage.setItem("productosMembresiaFac", JSON.stringify(productos))
+
+                        // Cargar
+                        totalFact=totalbase+totalFact;
+                        window.sessionStorage.setItem("totalFactura", totalFact)
+                        impuest=impuest+impuestobase;
+                        window.sessionStorage.setItem("impuesFactura", impuest)
+                        descuen = descuen+descuentobase;
+                        window.sessionStorage.setItem("descuenFactura", descuen)
+
+                        
+                    }else{
+
+                        const items = [elemento, ...productos];
+                        productos=items
+                        console.log("itemes Cargados: ",productos)
+                        //totalizar(nuevoElemento,totalbase,impuestobase,descuentobase)
+                        window.sessionStorage.setItem("productosMembresiaFac", JSON.stringify(productos))
+
+                        // Cargar
+                        totalFact=elemento.totalbase+totalFact;
+                        window.sessionStorage.setItem("totalFactura", totalFact)
+                        impuest=impuest+elemento.impuestobase;
+                        window.sessionStorage.setItem("impuesFactura", impuest)
+                        descuen = descuen+elemento.descuentobase;
+                        window.sessionStorage.setItem("descuenFactura", descuen)
+                    }
+                })
+
+
+        })  
+        
+        totalizar(listaInfo)
+    }
+    
+    const totalizar = (listaInfo)=>{
+        
+        const itemes = window.sessionStorage.getItem("productosMembresiaFac")        
+        totalFact=window.sessionStorage.getItem("totalFactura")
+        impuest=window.sessionStorage.getItem("impuesFactura")
+        descuen = window.sessionStorage.getItem("descuenFactura")
+        
+        console.log("productos: ", itemes)
+        console.log("total: ",totalFact)
+        console.log("impuesto: ",impuest)
+        console.log("descuento: ",descuen)
+        console.log("InfoCabecera",listaInfo)
+        //onSubmit(productos,listaInfo.formaPago,comprados)
+    }
+    
+
+    const onSubmit = async (data,forma,productos) => {
+        axios.post(ruta, data)
             .then((response) =>{
                 if(response.status ===201){
-                    cargarDetalle(response.data,listaInfo.formaPago)
+                    cargarDetalle(response.data,forma,productos)
                     
                     }else{
                         Swal.fire(
@@ -53,19 +207,21 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
                             'error'
                         )
                     }
-            })    
+            }) 
             
     }
 
     // Verificar datos para cargar a la factura
-    const cargarDetalle= async (data,forma) =>{
+    const cargarDetalle= async (data,forma,productos) =>{
 
-        comprados.map((comprado)=>(
+        productos.map((comprado)=>(
             key=comprado.id,
             verinven(comprado, data.id)            
         ))
         setGenFactura(data.id)
         setLastFactura(data)
+        setProductoMembresia()
+
         if(forma==="efectivo"){
             movEfectivo(data.id)
         }
@@ -86,15 +242,13 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
         
         await axios.get(rutainv)
         .then((res)=>{ 
-               
-              cargardetaverificado(datos,id,res.data.cantidad)      
+
+            cargardetaverificado(datos,id,res.data.cantidad)      
         })
         .catch((error)=>{
             console.log(error)
         })
-    }
-
-    
+    }    
 
     // Verificar 
     const cargardetaverificado = async(datos,id,cantidad)=>{
@@ -150,7 +304,7 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
             })
         }
     }
-
+    
     // y cargar detalles 
     const cargaritemes = async(datos,id)=>{
         listaDet={                            
@@ -186,39 +340,37 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
     const movEfectivo = async(factura)=>{
         
         await axios.get(rutasaldo)
-            .then((res)=>{ 
-                cargaEfectivo(res.data, factura)
-            })
-            .catch((error)=>{
-                console.log(error)
-            })
+        .then((res)=>{ 
+            cargaEfectivo(res.data, factura)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
     }
 
     // Registro del movimiento
     const cargaEfectivo = async(saldo,factura)=>{
-        //console.log(saldo+"-"+factura)
         listainfo={
-                    "saldo":saldo.saldo+totalFactura,
-                    "valor":totalFactura,
-                    "observations":`Venta en efectivo por la factura N°: ${factura}`,
-                    "factura":factura,
-                    "userId":sesionUser.id,
-                    "bodegaId":sesionUser.bodega
-                    }
-
-        await axios.post(rutaefectivo, listainfo).then((response) =>{
-            if(response.status ===201){
-                //console.log("se cargaron: "+response)
-            } else {
-                // Verificar si hay errores
+            "saldo":saldo.saldo+totalFactura,
+            "valor":totalFactura,
+            "observations":`Venta en efectivo por la factura N°: ${factura}`,
+            "factura":factura,
+            "userId":sesionUser.id,
+            "bodegaId":sesionUser.bodega
             }
-        })
+
+await axios.post(rutaefectivo, listainfo).then((response) =>{
+    if(response.status ===201){
+        //console.log("se cargaron: "+response)
+    } else {
+        // Verificar si hay errores
     }
+})
+    }    
 
     useEffect(() => {
-        setFocus("name");
-      }, [setFocus]);
-
+        axiosUsuariosCarga()
+    }, []);   
     
 
     return (
@@ -233,14 +385,55 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
             </div>
             <div className="row">
                 <div className="col-sm-6">
+                    <div className="container text-center alert alert-info  mt-4" role="alert">
+                        <h5>Digité Nombre o Cédula</h5>
+                        <input value={busca} autoFocus onChange={handleChange} type="text" placeholder='Buscar cliente' className='form-control'/>
+                    </div>
+                    {
+                        busca ?
+                        
+                            <div className="alert alert-info" role="alert">                                    
+                                <table className="table table-success table-hover table-bordered table-responsive table-striped">
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th scope="col"><small>NOMBRE</small></th>
+                                            <th scope="col"><small>CEDULA</small></th>
+                                            <th scope="col"><small>EMAIL</small></th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {buscados.map((buscado, index)=>(                                        
+                                            <tr key={buscado.id}>                                        
+                                                <td><small>{buscado.name}</small></td>
+                                                <td><small>{buscado.documento}</small></td>
+                                                <td><small>{buscado.email}</small></td>
+                                                <td>                                        
+                                                    <button className="btn btn-warning btn-sm" onClick={()=>elegir(buscado)}>Elegir</button>
+                                                </td>
+                                            </tr>                                        
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                    
+                        :
+                        <></>
+                        }
                     <div className="alert alert-warning" role="alert">
-                        <form onSubmit={handleSubmit(onSubmit)}>
+                        {
+                            elegido ?
+                            <h5>"Este cliente esta afiliado a una membresia, se aplicaran los descuentos al finalizar la factura"</h5>:
+                            <></>
+                        }
+                        <form onSubmit={handleSubmit(buscarproductos)}>
                         
                             <label htmlFor="name" className="form-label">Nombre:</label>
                             <input          
                                 name="name"
                                 type="text"
-                                onFocus
+                                //onFocus
                                 defaultValue="cliente Mostrador"
                                 className={`form-control ${errors.name && "error" }`}        
                                 {...register("name", {
@@ -389,8 +582,8 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
                                 <button type="submit" className="btn btn-warning">FACTURAR</button>
                             </div>  
                         </form>
-                    </div>  
-
+                    </div>
+                    
                 </div>
                 <div className="col-sm-6">                
                     <div className="container text-center">                                        

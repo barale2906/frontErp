@@ -4,7 +4,7 @@ import Swal from "sweetalert2"
 import AlertaContext from "../providers/AlertaContext"
 import url from "../utils/urlimport"
 
-export default function UsuDetalle({user, setEditUser}){
+export default function UsuDetalle({user, setEditUser, mio}){
     
     const alerta = useContext(AlertaContext)
     let estado = user.status
@@ -62,13 +62,20 @@ export default function UsuDetalle({user, setEditUser}){
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>
-                    <div className="btn-group" role="group" aria-label="Basic mixed styles example">
-                        {user.status===1 ? 
-                            <button className="btn btn-warning btn-sm" onClick={inactivarusuario}>Inactivar</button> : 
-                            <button className="btn btn-success btn-sm" onClick={inactivarusuario}>Activar</button>
-                        }
-                        <button type="button" className="btn btn-info btn-sm" onClick={()=>setEditUser(user)} data-bs-toggle="modal" data-bs-target="#staticBackdrop">Modificar</button>
-                    </div>
+                    {
+                        mio===1 ? 
+                        <div className="btn-group" role="group" aria-label="Basic mixed styles example">                       
+                                {user.status===1 ? 
+                                    <button className="btn btn-warning btn-sm" onClick={inactivarusuario}>Inactivar</button> : 
+                                    <button className="btn btn-success btn-sm" onClick={inactivarusuario}>Activar</button>
+                                }
+                            <button type="button" className="btn btn-info btn-sm" onClick={()=>setEditUser(user)} data-bs-toggle="modal" data-bs-target="#staticBackdrop">Modificar</button>
+                        </div> :
+                        <div className="btn-group" role="group" aria-label="Basic mixed styles example">                       
+                            <button type="button" className="btn btn-info btn-sm" onClick={()=>setEditUser(user)} data-bs-toggle="modal" data-bs-target="#staticBackdrop">Modificar</button>
+                        </div>
+                    }
+                    
                 </td>
             </tr> 
         </>              

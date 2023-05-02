@@ -3,7 +3,7 @@ import axios from "axios";
 
 import UserContext from "./UserContext";
 import UserReducer from "./UserReducer";
-import { GET_USER, PRODUCTOS, RESET, VALIDA_USER } from "./types";
+import { GET_BODEGA, GET_USER, PRODUCTOS, RESET, VALIDA_USER } from "./types";
 import url from "../../utils/urlimport";
 import Swal from "sweetalert2";
 import md5 from "md5";
@@ -50,15 +50,16 @@ const validar = async(userInfo)=>{
 
     const password=(info, userInfo)=>{
 
-        const encriptado=md5(userInfo.password)
+        const encriptado=md5(userInfo.password)        
         
         if(info.password===encriptado){
+            bodega(info.bodega);
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
                 title: `Bienvenid@: <strong>${info.name}</strong>.`,
                 showConfirmButton: false,
-                timer: 2500
+                timer: 1500
               })
 
               const sesionData = {
@@ -82,10 +83,20 @@ const validar = async(userInfo)=>{
             )
         }
     }
+
+    const bodega=(bodegaId)=>{
+      const rutabodega = url+"bodega/"+bodegaId
+      
+      axios.get(rutabodega)
+      .then((response) =>{
+            dispatch({ type: GET_BODEGA, payload: response.data });
+          })
+    }
 }
 
 const cierraSesion = ()=>{
   dispatch({ type: RESET, payload: initialState });
+  window.location.reload();
 }
 
 const buscaproductos = async()=>{
@@ -128,6 +139,7 @@ return (
         user: state.user,
         sesionUser: state.sesionUser,
         productos: state.productos,
+        bodegaActual: state.bodegaActual,
         validar, 
         cierraSesion,       
         buscaproductos,

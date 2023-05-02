@@ -40,13 +40,13 @@ export default function FacturaLista(){
     //Filtrar las facturas 
     const filtrar=(terminoBusqueda)=>{
         const resultadosBusqueda=facturas.filter((elemento)=>{
-          if( elemento.documento.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-          || elemento.name.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-          || elemento.formaPago.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
-          || elemento.id===terminoBusqueda
-          ){
+            if( elemento.documento.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+            || elemento.name.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+            || elemento.formaPago.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())
+            || elemento.id===terminoBusqueda
+            ){
             return elemento;
-          }
+        }
         });
         setBuscados(resultadosBusqueda);
     }

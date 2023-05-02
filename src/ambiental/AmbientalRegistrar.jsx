@@ -8,8 +8,8 @@ import url from "../utils/urlimport";
 const messages = {
     required: "Este campo es obligatorio",    
 };
-  
-  
+
+
 const patterns = {
     valor: /^[0-9]+$/i
 };
@@ -22,7 +22,7 @@ export default function AmbientalRegistrar({editRegistro}){
 
     useEffect(()=>{
         ubiId=editRegistro.id
-      }, [editRegistro])
+    }, [editRegistro])
 
     const {
         register,

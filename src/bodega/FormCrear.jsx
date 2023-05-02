@@ -76,7 +76,8 @@ const messages = {
         "observations":"Saldo Inicial",
         "factura":"bodega",
         "userId":1,
-        "bodegaId":id
+        "bodegaId":id,
+        "status":2
     }
     
     axios.post(rutaefe, cargaNueva)

@@ -1,11 +1,7 @@
-import MiCuentaDatos from "./MiCuentaDatos"
-import UserContext from "../providers/sesion/UserContext"
-import { useContext } from "react"
+import ListadoUsers from "./ListadoUsers";
 
 export default function MiCuenta(){
-    const {sesionUser} = useContext(UserContext) 
-    
     return(
-        <MiCuentaDatos sesionUser={sesionUser}/>
+        <ListadoUsers mio={2}/>
     )
 }

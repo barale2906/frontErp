@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import UserContext from "../providers/sesion/UserContext";
 
 export default function Menu(){
-    const {cierraSesion, sesionUser} = useContext(UserContext)
+    const {cierraSesion, sesionUser, bodegaActual} = useContext(UserContext)
     const salir = ()=>{
         cierraSesion()
     }
@@ -52,6 +52,8 @@ export default function Menu(){
                                     <li><hr className="dropdown-divider"/></li>
                                     <li><NavLink className="dropdown-item" to="/coworking">Coworking</NavLink></li>
                                     <li><hr className="dropdown-divider"/></li>
+                                    <li><NavLink className="dropdown-item" to="/membresia">Membresia</NavLink></li>
+                                    <li><hr className="dropdown-divider"/></li>
                                     <li><NavLink className="dropdown-item" to="/impuestos">Impuestos</NavLink></li>
                                     <li><NavLink className="dropdown-item" to="/listaprecios">Definir Lista de Precios</NavLink></li>
                                     <li><NavLink className="dropdown-item" to="/efectivo">Efectivo</NavLink></li>
@@ -59,7 +61,7 @@ export default function Menu(){
                                 </ul>
                             </li>                        
                         </ul>
-                        <h6>{sesionUser.name}</h6>
+                        <h6>{sesionUser.name} / Bodega: {bodegaActual.name} </h6>
                         <button type="button" class="btn-close" aria-label="Close" onClick={()=>salir()}></button>
                         
                     </div>

@@ -310,8 +310,8 @@ export default function FacturaGenera({tipo}){
             "expiration":detalle.expiration,
             "saldo":detalle.cantidad
         }
-       const items = [item, ...comprados] 
-       setComprados(items)
+        const items = [item, ...comprados] 
+        setComprados(items)
     }  
     
     // Elimina productos Cargados

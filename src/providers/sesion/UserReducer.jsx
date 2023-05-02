@@ -1,4 +1,4 @@
-import { GET_USER, PRODUCTOS, RESET, VALIDA_USER } from "./types";
+import { GET_BODEGA, GET_USER, PRODUCTOS, RESET, VALIDA_USER } from "./types";
 
 
 
@@ -15,6 +15,11 @@ export default (state, action) => {
       return {
         ...state,
         sesionUser: payload,
+      };
+    case GET_BODEGA:
+      return {
+        ...state,
+        bodegaActual: payload,
       };
     case PRODUCTOS:
       return {

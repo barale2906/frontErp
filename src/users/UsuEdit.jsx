@@ -5,30 +5,48 @@ import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import AlertaContext from "../providers/AlertaContext";
 import url from "../utils/urlimport";
+import UserContext from "../providers/sesion/UserContext";
 
 const messages = {
     required: "Este campo es obligatorio",
     name: "El formato introducido no es el correcto",
     email: "Debes introducir un email correcta",
-    password: "Digite mínimo 8 caracteres"    
+    password: "Digite mínimo 8 caracteres", 
+    phone: "Debes digitar tu contraseña de nuevo"   
   };
   
   
   const patterns = {
     //name: /^[A-Za-z]+$/i,
     email: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+
     
   };
 
-export default function UsuEdit({editUser}) {
+export default function UsuEdit({editUser, mio}) {
 
 const [bodegas, setBodegas] = useState([])
 const [pend,setPend]=useState(0)
+const {cierraSesion} = useContext(UserContext)
 const rutap = url+"bodega"; 
   
 
+//Verificar datos a cargar
+const cargaInicial = ()=>{
+  const datoEnt = {
+    bodega:editUser?.bodega,
+    email:editUser?.email,
+    name:editUser?.name,
+    rol:editUser?.rol,
+    status:editUser?.status
+  }
+  reset(datoEnt)
+}
+
+
+
 useEffect(()=>{
-  reset(editUser)
+  cargaInicial();
   axiosBodega();
   verificaPendientesCaja()
 }, [editUser])
@@ -70,6 +88,24 @@ const verificaPendientesCaja = async()=>{
 
 
 const alerta = useContext(AlertaContext) 
+const pasoSeguido=()=>{
+    if(mio===1){
+      alerta();
+      Swal.fire(
+        '¡MODIFICO EL USUARIO!',
+        'El Usuario ha sido modificado correctamente',
+        'success'
+      )
+    } else if (mio===2){
+      
+      Swal.fire(
+        '¡MODIFICASTE TUS DATOS!',
+        'Deberás iniciar sesión de nuevo',
+        'success'
+      )
+      cierraSesion();
+    }
+} 
 
 const {
   register,
@@ -80,7 +116,7 @@ const {
 
 
   const onSubmit = async (userInfo) => {
-
+    
     const datos={
       "email":userInfo.email,
       "password":md5(userInfo.password),
@@ -101,22 +137,18 @@ const {
     }).then((result) => {
       if (result.isConfirmed) {
   
-         axios.put(ruta, datos).then((response) =>{
-             if(response.status ===200){
-                  Swal.fire(
-                      '¡MODIFICO EL USUARIO!',
-                      'El Usuario ha sido modificado correctamente',
-                      'success'
-                  )
-                  alerta();
-             } else {
-                 Swal.fire(
-                     '¡Error!',
-                     'Hubo un problema al modificar el usuario',
-                     'error'
-                 )
-             }
-         })
+        axios.put(ruta, datos).then((response) =>{
+            if(response.status ===200){
+                
+                pasoSeguido();
+            } else {
+                Swal.fire(
+                    '¡Error!',
+                    'Hubo un problema al modificar el usuario',
+                    'error'
+                )
+            }
+        })
   
         
       }
@@ -159,6 +191,7 @@ const {
         />
         {errors.email && <p className="text-danger">{errors.email.message}</p>}
   
+        
         <label htmlFor="phone" className="form-label">Contraseña:</label>
         <input
           name="password"
@@ -218,23 +251,46 @@ const {
         
         {errors.bodega && <p className="text-danger">{errors.bodega.message}</p>}
 
-        <label htmlFor="rol" className="form-label">Rol del usuario</label>
-        <select          
-            name="rol"                                
-            className={`form-control ${errors.rol && "error" }`}        
-            {...register("rol", {
-                required: messages.required,
-                pattern: {
-                value: patterns.rol,
-                message: messages.rol
-                }
-            })}
-        >                                
-            <option value="1">Operador</option>
-            <option value="2">Administrador</option>
-            <option value="3">Super Usuario</option>            
-        </select>
-        {errors.rol && <p className="text-danger">{errors.rol.message}</p>}
+        
+        {
+          mio===1 ? 
+          <>
+              <label htmlFor="rol" className="form-label">Rol del usuario</label>
+              <select          
+                name="rol"                                
+                className={`form-control ${errors.rol && "error" }`}        
+                {...register("rol", {
+                    required: messages.required,
+                    pattern: {
+                    value: patterns.rol,
+                    message: messages.rol
+                    }
+                })}
+            >                                
+                <option value="1">Operador</option>
+                <option value="2">Administrador</option>
+                <option value="3">Super Usuario</option>            
+            </select>
+            {errors.rol && <p className="text-danger">{errors.rol.message}</p>}
+          </>
+          :
+          <>
+              <input
+                name="rol"
+                type="hidden"
+                
+                className={`form-control ${errors.rol && "error"}`}
+                {...register("rol", {
+                  required: messages.required,
+                  pattern: {
+                    value: patterns.rol,
+                    message: messages.rol
+                  }
+                })}
+              />
+          </>      
+        }
+        
   
         
         <div className="modal-footer">

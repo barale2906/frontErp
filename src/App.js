@@ -37,6 +37,8 @@ import Login from "./users/Login";
 import MiCuenta from "./users/MiCuenta";
 import Roles from "./users/Roles";
 import FacturaCoworking from "./facturacion/FacturaCoworking";
+import MembresiaLanding from "./membresia/MembresiaLanding";
+import MembresiaConfiguracion from "./membresia/MembresiaConfiguracion";
 
 
 
@@ -93,6 +95,8 @@ export default function App(){
                   <Route path="/reporteProveedor" element={<ProveedoresReporte/>}/>
                   <Route path="/reporteCierres" element={<CierreReporte/>}/>
                   <Route path="/reporteInventario" element={<InventarioReporte/>}/>
+                  <Route path="/membresia" element={<MembresiaLanding/>}/>
+                  <Route path="/membresia/:id" element={<MembresiaConfiguracion/>}/>
                   </>
                 }                
               </Route>
@@ -124,6 +128,8 @@ export default function App(){
                 <Route path="/reporte/basicos" element={<Basicos/>}/>
                 <Route path="/reporteCierres" element={<CierreReporte/>}/>
                 <Route path="/reporteInventario" element={<InventarioReporte/>}/>
+                <Route path="/membresia" element={<MembresiaLanding/>}/>
+                <Route path="/membresia/:id" element={<MembresiaConfiguracion/>}/>
               </Route>               
 
                         
