@@ -9,6 +9,7 @@ import UserContext from "../providers/sesion/UserContext"
 import Paginacion from "../components/Paginacion"
 import InventarioEditar from "./InventarioEditar"
 import { NavLink } from "react-router-dom"
+import InventarioTraslado from "./InventarioTraslado"
 
 export default function InventarioLanding(){
 
@@ -146,6 +147,20 @@ export default function InventarioLanding(){
                             </div>  
                             <div className="modal-body">
                                 <InventarioEditar editInventario={editInventario}/>      
+                            </div>
+                                        
+                        </div>
+                    </div>
+                </div>
+                <div className="modal fade" id="trasladar" data-bs-backdrop="static" data-bs-keyboard="false"  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-scrollable">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="staticBackdropLabel">Trasladar Entre Bodegas</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>  
+                            <div className="modal-body">
+                                <InventarioTraslado editInventario={editInventario} />   
                             </div>
                                         
                         </div>
