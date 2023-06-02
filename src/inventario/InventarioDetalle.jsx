@@ -36,7 +36,10 @@ export default function InventarioDetalle({inventario, setEditIventario}){
             <td>
                 {sesionUser.rol>=2 ?
                     <>
-                        <button type="button" className="btn btn-danger btn-sm" onClick={()=>setEditIventario(inventario)} data-bs-toggle="modal" data-bs-target="#staticBackdrop">Baja</button>
+                        <div className="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" className="btn btn-success btn-sm" onClick={()=>setEditIventario(inventario)} data-bs-toggle="modal" data-bs-target="#trasladar">Trasladar</button>
+                            <button type="button" className="btn btn-danger btn-sm" onClick={()=>setEditIventario(inventario)} data-bs-toggle="modal" data-bs-target="#staticBackdrop">Baja</button>
+                        </div>                        
                     </>:
                     <></>
                 }

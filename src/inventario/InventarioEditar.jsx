@@ -36,16 +36,9 @@ export default function InventarioEditar({editInventario}){
         reset(editInventario)
     }, [editInventario])
 
-    console.log(editInventario)
-
     const onSubmit = async (inventarioInfo) => {
 
         const ruta = url+"inventario/"+editInventario.id;
-
-        console.log(ruta)
-        console.log("-----")
-        console.log(inventarioInfo)
-        console.log("---#########")
         
         if(inventarioInfo.cantidad<=editInventario.cantidad){
 
@@ -64,9 +57,6 @@ export default function InventarioEditar({editInventario}){
                 "cantidad":nuevcantidad,
                 "observations": `${now}: ${sesionUser.name} Dio de baja: ${inventarioInfo.cantidad}  unidades por el motivo: ${inventarioInfo.observaciones} ---- ${editInventario.observations}`
             }
-                
-
-            console.log(inventarioInfoDet)
 
             axios.put(ruta, inventarioInfoDet)
             .then((response) =>{
@@ -100,38 +90,38 @@ export default function InventarioEditar({editInventario}){
 
     return(
         <>
-        <form onSubmit={handleSubmit(onSubmit)}>
-            
-            <label htmlFor="cantidad" className="form-label">Cantidad</label>
-            <input
-                name="cantidad"
-                type="text"                
-                className={`form-control ${errors.cantidad && "error"}`}
-                {...register("cantidad", {
-                required: messages.required,
-                pattern: {
-                    value: patterns.cantidad,
-                    message: messages.cantidad
-                }
-                })}
-            />
-            {errors.cantidad && <p className="text-danger">{errors.cantidad.message}</p>}
+            <form onSubmit={handleSubmit(onSubmit)}>
+                
+                <label htmlFor="cantidad" className="form-label">Cantidad</label>
+                <input
+                    name="cantidad"
+                    type="text"                
+                    className={`form-control ${errors.cantidad && "error"}`}
+                    {...register("cantidad", {
+                    required: messages.required,
+                    pattern: {
+                        value: patterns.cantidad,
+                        message: messages.cantidad
+                    }
+                    })}
+                />
+                {errors.cantidad && <p className="text-danger">{errors.cantidad.message}</p>}
 
-            <label htmlFor="observaciones" className="form-label">Observaciones:</label>
-            <input
-                name="observaciones"
-                type="text"
-                placeholder="Registre las observaciones de baja"
-                className={`form-control ${errors.observaciones && "error"}`}
-                {...register("observaciones", {
-                required: messages.required,
-                pattern: {
-                    value: patterns.observaciones,
-                    message: messages.observaciones
-                }
-                })}
-            />
-            {errors.observaciones && <p className="text-danger">{errors.observaciones.message}</p>}
+                <label htmlFor="observaciones" className="form-label">Observaciones:</label>
+                <input
+                    name="observaciones"
+                    type="text"
+                    placeholder="Registre las observaciones de baja"
+                    className={`form-control ${errors.observaciones && "error"}`}
+                    {...register("observaciones", {
+                    required: messages.required,
+                    pattern: {
+                        value: patterns.observaciones,
+                        message: messages.observaciones
+                    }
+                    })}
+                />
+                {errors.observaciones && <p className="text-danger">{errors.observaciones.message}</p>}
 
 
                 <div className="modal-footer">
