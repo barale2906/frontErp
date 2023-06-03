@@ -15,23 +15,24 @@ const patterns = {
     
 };
 
-export default function MembresiaEditarUsuario({editUsuario}){
-    const [membresias, setMembresias] = useState([]);
-    const rutam = url+"membresiaEncabezado";
+export default function ComisionesEditarUsuario({editUsuario}){
+
+    const [comisiones, setComisiones] = useState([]);
+    const rutam = url+"comisionencabezado";
     const alerta = useContext(AlertaContext);
 
-    // Consulta para mostrar las membresias
-    const axiosMembresias = async () => {
+    // Consulta para mostrar las comisiones
+    const axiosComisiones = async () => {
         await axios.get(rutam)
         .then((res)=>{            
-            setMembresias(res.data);        
+            setComisiones(res.data);        
         })
         .catch((error)=>{
             console.log(error)
         })
     };
     useEffect(()=>{
-        axiosMembresias();
+        axiosComisiones();
     }, [])
 
     useEffect(()=>{
@@ -47,7 +48,7 @@ export default function MembresiaEditarUsuario({editUsuario}){
 
     const onSubmit = async (listaInfo) => {
 
-        const ruta = url+"membresiaUsuario/"+editUsuario.id;
+        const ruta = url+"comisionusuario/"+editUsuario.id;
         
         Swal.fire({
             title: '¿Estas Seguro?',
@@ -179,24 +180,24 @@ export default function MembresiaEditarUsuario({editUsuario}){
             />
             {errors.email && <p className="text-danger">{errors.email.message}</p>}
 
-            <label htmlFor="membreEncaId" className="form-label">Seleccione Membresia a la que esta asignado el usuario</label>
+            <label htmlFor="comiEncaId" className="form-label">Seleccione comisiones asignadas</label>
             <select          
-                name="membreEncaId"                                
-                className={`form-control ${errors.membreEncaId && "error" }`}        
-                {...register("membreEncaId", {
+                name="comiEncaId"                                
+                className={`form-control ${errors.comiEncaId && "error" }`}        
+                {...register("comiEncaId", {
                     required: messages.required,
                     pattern: {
-                    value: patterns.membreEncaId,
-                    message: messages.membreEncaId
+                    value: patterns.comiEncaId,
+                    message: messages.comiEncaId
                     }
                 })}
             >                                
                 <option value=""></option>
-                {membresias.map((membresia)=>(                                        
-                    <option value={membresia.id} key={membresia.id}>{membresia.name}</option>                                     
+                {comisiones.map((comision)=>(                                        
+                    <option value={comision.id} key={comision.id}>{comision.name}</option>                                     
                 ))}
             </select>
-            {errors.membreEncaId && <p className="text-danger">{errors.membreEncaId.message}</p>}           
+            {errors.comiEncaId && <p className="text-danger">{errors.comiEncaId.message}</p>}           
                             
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

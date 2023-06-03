@@ -59,6 +59,16 @@ export default function Menu(){
                                     <li><NavLink className="dropdown-item" to="/efectivo">Efectivo</NavLink></li>
                                     <li><NavLink className="dropdown-item" to="/reporteFacturacion">Reportes</NavLink></li>
                                 </ul>
+                            </li>
+                            <li className="nav-item dropdown"> 
+                                <a className="nav-link dropdown-toggle fs-6" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="">
+                                    FINANCIERA
+                                </a>
+                                <ul className="dropdown-menu">
+                                    <li><NavLink className="dropdown-item" to="/movimientos">Movimientos</NavLink></li>
+                                    <li><hr className="dropdown-divider"/></li>
+                                    <li><NavLink className="dropdown-item" to="/comisiones">Comisiones</NavLink></li>
+                                </ul>
                             </li>                        
                         </ul>
                         <h6>{sesionUser.name} / Bodega: {bodegaActual.name} </h6>

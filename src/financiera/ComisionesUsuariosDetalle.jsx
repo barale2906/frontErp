@@ -4,15 +4,16 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import url from "../utils/urlimport";
 
-export default function MembresiaUsuariosDetalle({usuario, setEditUsuario, index, id}){
+export default function ComisionesUsuariosDetalle({usuario, setEditUsuario, index, id}){
+    
     const alerta = useContext(AlertaContext)
-    const asignarMembresia = async ()=>{
+    const asignarComision = async ()=>{
         
-        const ruta = url+"membresiausuario/"+usuario.id+"/"+id;        
+        const ruta = url+"comisionusuario/"+usuario.id+"/"+id;        
 
         Swal.fire({
             title: '¿Estas Seguro?',
-            text: `¿Quieres Asignar a: ${usuario.name} esta membresia?`,
+            text: `¿Quieres Asignar a: ${usuario.name} esta comision?`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -49,13 +50,13 @@ export default function MembresiaUsuariosDetalle({usuario, setEditUsuario, index
                 <td><small>{usuario.email}</small></td>
                 <td>
                     <div className="btn-group" role="group" aria-label="Basic mixed styles example">
-                        {usuario.membreEncaId===id ? 
+                        {usuario.comiEncaId===id ? 
                             <>                                
-                                <button className="btn btn-success btn-sm" onClick={asignarMembresia}><small>SI</small></button>                                
+                                <button className="btn btn-success btn-sm" onClick={asignarComision}><small>SI</small></button>                                
                             </>
                             : 
                             <>                                
-                                <button className="btn btn-default btn-sm" onClick={asignarMembresia}><small>No</small></button>                                
+                                <button className="btn btn-default btn-sm" onClick={asignarComision}><small>No</small></button>                                
                             </>
                         }
                         <button type="button" className="btn btn-info btn-sm" onClick={()=>setEditUsuario(usuario)} data-bs-toggle="modal" data-bs-target="#staticBackdrop"><small>Modificar</small></button>

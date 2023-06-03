@@ -131,14 +131,14 @@ export default function MovimientosBodega(){
                                 <Vacio/>
                             </>
                         }
-                                               
+
                     </div>
                 </div> :
                 <>                                       
                     <Vacio/>
                 </>
             }
-                       
+
         </>
     )
 }

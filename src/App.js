@@ -39,6 +39,9 @@ import Roles from "./users/Roles";
 import FacturaCoworking from "./facturacion/FacturaCoworking";
 import MembresiaLanding from "./membresia/MembresiaLanding";
 import MembresiaConfiguracion from "./membresia/MembresiaConfiguracion";
+import ComisionesLanding from "./financiera/ComisionesLanding";
+import MovimientosLanding from "./financiera/MovimientosLanding";
+import ComisionesConfiguracion from "./financiera/ComisionesConfiguracion";
 
 
 
@@ -97,6 +100,10 @@ export default function App(){
                   <Route path="/reporteInventario" element={<InventarioReporte/>}/>
                   <Route path="/membresia" element={<MembresiaLanding/>}/>
                   <Route path="/membresia/:id" element={<MembresiaConfiguracion/>}/>
+                  <Route path="/comisiones" element={<ComisionesLanding/>}/>
+                  <Route path="/comisiones/:id" element={<ComisionesConfiguracion/>}/>
+                  <Route path="/movimientos" element={<MovimientosLanding/>}/>
+                  
                   </>
                 }                
               </Route>
@@ -130,6 +137,9 @@ export default function App(){
                 <Route path="/reporteInventario" element={<InventarioReporte/>}/>
                 <Route path="/membresia" element={<MembresiaLanding/>}/>
                 <Route path="/membresia/:id" element={<MembresiaConfiguracion/>}/>
+                <Route path="/comisiones" element={<ComisionesLanding/>}/>
+                <Route path="/comisiones/:id" element={<ComisionesConfiguracion/>}/>
+                <Route path="/movimientos" element={<MovimientosLanding/>}/>
               </Route>               
 
                         
