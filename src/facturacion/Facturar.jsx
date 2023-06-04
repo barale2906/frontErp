@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import UserContext from "../providers/sesion/UserContext";
 import url from "../utils/urlimport";
+import tope from "../utils/monto";
 
 const messages = {
     required: "Este campo es obligatorio",
@@ -11,7 +12,6 @@ const messages = {
     description: "Detalla el tipo de impuesto",
     valor: "Digite mínimo 8 caracteres"    
 };
-  
 
 const patterns = {
 //name: /^[A-Za-z]+$/i,
@@ -20,7 +20,13 @@ const patterns = {
 export default function Facturar({comprados,impuestos, descuentos, totalFactura, setGenFactura, setLastFactura}){
 
     const {sesionUser} = useContext(UserContext)
-    const [usuarios, setUsuarios] = useState([])    
+    const [usuarios, setUsuarios] = useState([]) 
+    const [medios, setMedios] = useState([])
+    const [domicilios, setdomicilios] = useState([])
+    const [reqDomi, setReqDomi] = useState("0")
+    const [domiEleg, setDomiEleg] = useState()
+    const [comisionistas, setComisionistas] = useState()
+    const [comiEleg, setComiEleg] = useState()
     const [busca, setBusca] = useState()
     const [buscados, setBuscados] = useState()
     const [elegido, setElegido]= useState()    
@@ -40,7 +46,7 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
     let descuen = 0;
     let productos = [];
 
-    
+
     // Seleccionar Usuarios cargados
     const axiosUsuariosCarga = async()=>{
         const ruta=url+"membresiaUsuario"        
@@ -52,6 +58,65 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
             console.log(error)
         })
     }
+
+    //Requiere Domicilio
+    const onChange = e=>{  
+        setReqDomi(e.target.value)
+        if(totalFactura>=tope)
+        {
+            aplicaDomicilio()
+        }                    
+    }    
+
+    // Verifica si tiene el domicilio incluido
+    const aplicaDomicilio = ()=>{
+        setDomiEleg(domicilios[0])
+    }
+
+    // Asignar tarifa de domicilios
+    const asigTariDomi = (domi)=>{
+        setDomiEleg(domi)
+    }
+    // Seleccionar Usuarios cargados
+    const axiosMediosCarga = async()=>{
+        const rutam=url+"medioPago"        
+        await axios.get(rutam)
+        .then((res)=>{                 
+            setMedios(res.data)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+    }
+
+    // Seleccionar domicilios
+    const axiosDomis = async()=>{
+        const rutam=url+"domicilioTarifa/1/status"        
+        await axios.get(rutam)
+        .then((res)=>{                 
+            setdomicilios(res.data)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+    }
+
+    // Seleccionar comisionistas
+    const axiosComisionistas = async()=>{
+        const rutam=url+"comisionusuario"        
+        await axios.get(rutam)
+        .then((res)=>{                 
+            setComisionistas(res.data)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+    }
+
+    // Select Comisionista
+    const onCambio = e=>{  
+        setComiEleg(e.target.value)
+    }    
 
     // carga datos a buscar
     const handleChange=e=>{
@@ -370,6 +435,9 @@ await axios.post(rutaefectivo, listainfo).then((response) =>{
 
     useEffect(() => {
         axiosUsuariosCarga()
+        axiosMediosCarga()
+        axiosDomis()
+        axiosComisionistas()
     }, []);   
     
 
@@ -540,10 +608,9 @@ await axios.post(rutaefectivo, listainfo).then((response) =>{
                                     }
                                 })}
                             >                                
-                                
-                                <option value="efectivo">Efectivo</option>
-                                <option value="tc">Tarjeta de Crédito</option>
-                                <option value="otros">Otros</option>
+                                {medios.map((medio, index)=>(
+                                    medio.name!=="Aporte Socios" ? <option value={medio.id}>{medio.name}</option>:<></>
+                                ))}
                             </select>
                             {errors.formaPago && <p className="text-danger">{errors.formaPago.message}</p>}
 
@@ -585,7 +652,60 @@ await axios.post(rutaefectivo, listainfo).then((response) =>{
                     </div>
                     
                 </div>
-                <div className="col-sm-6">                
+                <div className="col-sm-6">
+                    <div className="container text-center">
+                        <h5>Requiere Domicilio</h5>
+                        <select value={reqDomi} className="form-select mb-3" onChange={onChange} >
+                            <option value=""></option>
+                            <option value="1">Si</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    {
+                        reqDomi==="0" ?
+                        <></>
+                        :
+                        <div className="container text-center">
+                            <table className="table table-info table-hover table-bordered table-responsive table-striped mt-3">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">NOMBRE</th>  
+                                        <th scope="col">DETALLE</th>
+                                        <th scope="col">TARIFA</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {domicilios.map((domicilio, index)=>(                                        
+                                        <tr key={domicilio.id}>
+                                            <td><small>{domicilio.name}</small></td>
+                                            <td><small>{domicilio.detalle}</small></td>
+                                            <td><small>{"$ "+ new Intl.NumberFormat().format(domicilio.tarifa)}</small></td>
+                                            <td>
+                                                {
+                                                    domiEleg?.id===domicilio.id ?
+                                                    <small>Asignada</small>
+                                                    :
+                                                    <button type="button" className="btn btn-info btn-sm" onClick={()=>asigTariDomi(domicilio)}>Elegir</button>
+                                                }                                            
+                                            </td>
+                                        </tr>                                            
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+
+                    <div className="container text-center">
+                        <h5>Elija Comisionista</h5>
+                        <select value={comiEleg} className="form-select mb-3" onChange={onCambio} >
+                            <option value=""></option>
+                            {comisionistas?.map((comisionista, index)=>(
+                                <option value={comisionista}>{comisionista.name}</option>
+                            ))}
+                        </select>
+                    </div>
+                                    
                     <div className="container text-center">                                        
                         <table className="table table-success table-hover table-bordered table-responsive table-striped">
                             <thead>

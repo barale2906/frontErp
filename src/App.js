@@ -43,6 +43,7 @@ import ComisionesLanding from "./financiera/ComisionesLanding";
 import MovimientosLanding from "./financiera/MovimientosLanding";
 import ComisionesConfiguracion from "./financiera/ComisionesConfiguracion";
 import DomiciliosLanding from "./domicilios/DomiciliosLanding";
+import DomicilioTarifaListado from "./domicilios/DomicilioTarifaListado";
 
 
 
@@ -104,6 +105,8 @@ export default function App(){
                   <Route path="/comisiones" element={<ComisionesLanding/>}/>
                   <Route path="/comisiones/:id" element={<ComisionesConfiguracion/>}/>
                   <Route path="/movimientos" element={<MovimientosLanding/>}/>
+                  <Route path="/domicilios" element={<DomiciliosLanding/>}/>
+                  <Route path="/domiciliosTarifas" element={<DomicilioTarifaListado/>}/>
                   
                   </>
                 }                
@@ -142,6 +145,7 @@ export default function App(){
                 <Route path="/comisiones/:id" element={<ComisionesConfiguracion/>}/>
                 <Route path="/movimientos" element={<MovimientosLanding/>}/>
                 <Route path="/domicilios" element={<DomiciliosLanding/>}/>
+                <Route path="/domiciliosTarifas" element={<DomicilioTarifaListado/>}/>
               </Route>               
 
                         

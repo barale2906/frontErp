@@ -320,6 +320,7 @@ export default function FacturaGenera({tipo}){
         setTotalFactura(0)
         setDescuentos(0)
         setImpuestos(0)
+        sessionStorage.clear()
     }
 
     //Iniciar Facturación
@@ -569,8 +570,7 @@ export default function FacturaGenera({tipo}){
                     <>
                         <div className="container text-center">                                            
                             <Facturar comprados={comprados} impuestos={impuestos} descuentos={descuentos} totalFactura={totalFactura} setGenFactura={setGenFactura} setLastFactura={setLastFactura}/>                                            
-                        </div>
-                        
+                        </div>                        
                     </>
                 }      
 
