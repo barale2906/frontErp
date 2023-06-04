@@ -68,6 +68,8 @@ export default function Menu(){
                                     <li><NavLink className="dropdown-item" to="/movimientos">Movimientos</NavLink></li>
                                     <li><hr className="dropdown-divider"/></li>
                                     <li><NavLink className="dropdown-item" to="/comisiones">Comisiones</NavLink></li>
+                                    <li><hr className="dropdown-divider"/></li>
+                                    <li><NavLink className="dropdown-item" to="/domicilios">Domicilios</NavLink></li>
                                 </ul>
                             </li>                        
                         </ul>
