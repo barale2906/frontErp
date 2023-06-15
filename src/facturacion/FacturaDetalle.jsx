@@ -14,7 +14,7 @@ export default function FacturaDetalle ({variable, setDetalle, imprime}){
                 <td>{"$ "+ new Intl.NumberFormat().format(variable.descuentos)}</td>
                 <td>{"$ "+ new Intl.NumberFormat().format(variable.impuestos)}</td>
                 <td>{"$ "+ new Intl.NumberFormat().format(variable.totalFactura)}</td>
-                <td>{variable.formaPago}</td>
+                <td>{variable.medioPago.name}</td>
                 <td>{variable.user.name}</td>
                 <td>{variable.bodega.name}</td>
                 

@@ -7,6 +7,7 @@ export default function FacturaImprimir({facturad}){
 
     const [basicos, setBasicos]=useState()
     const [detalles, setDetalles]=useState()
+    const [medio, setMedio] =useState()
 
     const axiosBasicos=async()=>{
         const rutain=url+"basicos/1"       
@@ -35,16 +36,34 @@ export default function FacturaImprimir({facturad}){
 
     }
 
+    const axiosMedio=async()=>{
+
+        const rutamedio=url+"medioPago/"+facturad.medioId
+        console.log("medio", rutamedio)
+        
+
+        axios.get(rutamedio)
+        .then((res)=>{
+            setMedio(res.data)
+            console.log("Medio pago: ",res.data)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+
+    }
+
     const ref = useRef()
 
     useEffect(()=>{
         axiosBasicos()
         axiosProductos()
+        axiosMedio()
     },[facturad])
 
 
     
-    if(basicos && facturad && detalles)
+    if(basicos && facturad && detalles && medio)
     return(
         <>
             <div ref={ref} className="d-none d-print-block m-5 p-3" >
@@ -61,7 +80,7 @@ export default function FacturaImprimir({facturad}){
                         </h2>
                     </div>
                     <div className="col">
-                        <h2>Forma de Pago: <strong>{facturad.formaPago}</strong></h2>
+                        <h2>Forma de Pago: <strong>{medio.name}</strong></h2>
                     </div>
                 </div>
                 <hr />
@@ -103,7 +122,7 @@ export default function FacturaImprimir({facturad}){
                     <tbody>
                         {
                             detalles.map((detalle, index)=>(
-                               <>
+                                <>
                                     <tr key={detalle.id}>
                                         <td><h5>{detalle.comercial}</h5></td>
                                         <td><h5 align="center">{detalle.producto.unit}</h5></td>
@@ -112,11 +131,11 @@ export default function FacturaImprimir({facturad}){
                                         <td><h5 align="right">{"$ "+ new Intl.NumberFormat().format(detalle.descuento)}</h5></td>                                     
                                         <td><h5 align="right">{"$ "+ new Intl.NumberFormat().format(detalle.totalbase)}</h5></td>
                                     </tr>                                    
-                               </> 
+                                </> 
                             ))
                         } 
                         <tr>
-                            <td colSpan="5"><h5 align="right"><strong>Total Factura</strong></h5></td>
+                            <td colSpan="5"><h5 align="right"><strong>Total Registro</strong></h5></td>
                             <td><h5 align="right">{"$ "+ new Intl.NumberFormat().format(facturad.totalFactura)}</h5></td>
                         </tr>                        
                     </tbody>

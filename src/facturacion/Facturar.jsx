@@ -166,9 +166,9 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
             window.sessionStorage.setItem("comiEleg", JSON.stringify(comiEleg))
             if(reqDomi==="0"){
                 const domicilio={
-                    "domiId":0,
-                    "domiName":"No Aplico Domicilio",
-                    "domiTarifa":0
+                    "id":0,
+                    "name":"No Aplico Domicilio",
+                    "tarifa":0
                 }
                 window.sessionStorage.setItem("domiEleg", JSON.stringify(domicilio))
             }else{
@@ -250,7 +250,8 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
                             "tipoDocumento":listaInfo.tipoDocumento,
                             "totalFactura":totalFact,
                             "updatedAt":listaInfo.updatedAt,
-                            "updatedAt":listaInfo.updatedAt
+                            "updatedAt":listaInfo.updatedAt,
+                            "userId":sesionUser.id
                         }
                         window.sessionStorage.setItem("listaInfo", JSON.stringify(cabecera))
 
@@ -258,8 +259,7 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
                     }else{
 
                         const items = [elemento, ...productos];
-                        productos=items
-                        console.log("itemes Cargados: ",productos)                        
+                        productos=items                                              
                         window.sessionStorage.setItem("productosComprados", JSON.stringify(productos))
 
                         // Cargar
@@ -288,7 +288,8 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
                             "tipoDocumento":listaInfo.tipoDocumento,
                             "totalFactura":totalFact,
                             "updatedAt":listaInfo.updatedAt,
-                            "updatedAt":listaInfo.updatedAt
+                            "updatedAt":listaInfo.updatedAt,
+                            "userId":sesionUser.id
                         }
                         window.sessionStorage.setItem("listaInfo", JSON.stringify(cabecera))
                     }
@@ -304,9 +305,9 @@ export default function Facturar({comprados,impuestos, descuentos, totalFactura,
         window.sessionStorage.setItem("aplicaDomicilio", JSON.stringify(reqDomi))
         if(reqDomi==="0"){
             const domicilio={
-                "domiId":0,
-                "domiName":"No Aplico Domicilio",
-                "domiTarifa":0
+                "id":0,
+                "name":"No Aplico Domicilio",
+                "tarifa":0
             }
             window.sessionStorage.setItem("domiEleg", JSON.stringify(domicilio))
         }else{

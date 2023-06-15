@@ -54,11 +54,7 @@ export default function FacturaCrear({setGenFactura, setLastFactura, setPinFact}
 
         if(medio==1){
             movEfectivo(data.id)
-        }
-
-        if(aplicaDomi==="1"){
-            apliDomi(data.id)
-        }
+        }       
 
         if(comi!=="0"){
             aplicaComi(data.id)
@@ -74,28 +70,12 @@ export default function FacturaCrear({setGenFactura, setLastFactura, setPinFact}
 
         setGenFactura(data.id)
         setLastFactura(data)
+        apliDomi(data.id)
         sessionStorage.clear()
         setPinFact()
     }
 
-    // Carga domicilio
-    const apliDomi = async(id)=>{
-        const rutaUpdate = ruta+"/"+id        
-
-        const domicilio={
-            "domiId":domi.id,
-            "domiName":domi.name,
-            "domiTarifa":domi.tarifa
-        }
-        axios.put(rutaUpdate, domicilio)
-        .then((response) =>{
-            if(response.status ===201){
-                //console.log(response.data)
-            }else{
-                
-            }
-        })
-    }
+    
 
 
     // Carga Comisionista
@@ -238,13 +218,53 @@ export default function FacturaCrear({setGenFactura, setLastFactura, setPinFact}
             "bodegaId":sesionUser.bodega
             }
 
-await axios.post(rutaefectivo, listainfo).then((response) =>{
-    if(response.status ===201){
-        //console.log("se cargaron: "+response)
-    } else {
-        // Verificar si hay errores
+            await axios.post(rutaefectivo, listainfo).then((response) =>{
+                if(response.status ===201){
+                    //console.log("se cargaron: "+response)
+                } else {
+                    // Verificar si hay errores
+                }
+            })
     }
-})
+
+    // Carga domicilio
+    const apliDomi = async(id)=>{
+        const rutaUpdate = ruta+"/"+id  
+
+        const domici={
+            "domiId":domi.id,
+            "domiName":domi.name,
+            "domiTarifa":domi.tarifa
+        }
+
+        axios.put(rutaUpdate, domici)
+        .then((response) =>{
+            if(response.status ===201){
+                //console.log("Carga Domicilio: ",response.data)
+            }else{
+                
+            }
+        })
+        
+        if(aplicaDomi!=="0"){
+            const domiruta = url+"domicilio"
+
+            const domicil={
+                "montoFactura":totalFactura,
+                "observaciones":"Se programa domicilio",
+                "tarifaDomi":domi.tarifa,
+                "factId":id,
+                "domiTarifaId":domi.id
+            }
+            axios.post(domiruta, domicil)
+            .then((response) =>{
+                if(response.status ===201){
+                    //console.log("Programa Domicilio: ",response.data)
+                }else{
+                    
+                }
+            })
+        }
     }
 
     useEffect(() => {
