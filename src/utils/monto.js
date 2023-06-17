@@ -1,3 +1,3 @@
-const tope = 100000
+const tope = 450
 
 export default tope

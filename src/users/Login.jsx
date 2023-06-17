@@ -1,7 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../providers/sesion/UserContext";
+import url from "../utils/urlimport";
+import axios from "axios";
 
 const messages = {
     required: "Este campo es obligatorio",
@@ -14,6 +16,7 @@ const messages = {
     
   };
 export default function Login(){
+    const [basico, setBasico]=useState([])
     
     const {
         register,
@@ -35,15 +38,37 @@ export default function Login(){
         navig("/dashboard")
     }
 
+     // Cargar Básicos
+     const axiosBasico=async()=>{
+        const rutaBasico=url+"basicos"
+
+        await axios.get(rutaBasico)
+        .then((res)=>{
+            setBasico(res.data)
+        })
+
+        .catch((error)=>{
+            console.log(error)
+        })
+    }
+
+    useEffect(()=>{
+        axiosBasico()
+    },[])
+
     useEffect(() => {
-        setFocus("email");
+        setFocus("email");        
       }, [setFocus]);
 
+    
+
+    
+    if(basico)
     return (
         <>
             <div className="row">
                 <div className="alert alert-info text-center" role="alert">
-                    <h1>¡HOLA BIENVENID@ AL SISTEMA DE DROGUERIA VITAL LP!</h1>
+                    <h1>¡HOLA BIENVENID@ AL SISTEMA DE {basico[0]?.name}!</h1>
                 </div>
                 <div className="container text-center col-md-4 mt-5">
 

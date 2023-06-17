@@ -73,8 +73,8 @@ export default function Menu(){
                                 </ul>
                             </li>                        
                         </ul>
-                        <h6>{sesionUser.name} / Bodega: {bodegaActual.name} </h6>
-                        <button type="button" class="btn-close" aria-label="Close" onClick={()=>salir()}></button>
+                        <h6>{sesionUser.name} / Bodega: {bodegaActual?.name} </h6>
+                        <button type="button" className="btn-close" aria-label="Close" onClick={()=>salir()}></button>
                         
                     </div>
             </div>

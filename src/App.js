@@ -44,6 +44,7 @@ import MovimientosLanding from "./financiera/MovimientosLanding";
 import ComisionesConfiguracion from "./financiera/ComisionesConfiguracion";
 import DomiciliosLanding from "./domicilios/DomiciliosLanding";
 import DomicilioTarifaListado from "./domicilios/DomicilioTarifaListado";
+import DomiciliosLegalizar from "./domicilios/DomiciliosLegalizar";
 
 
 
@@ -107,6 +108,7 @@ export default function App(){
                   <Route path="/movimientos" element={<MovimientosLanding/>}/>
                   <Route path="/domicilios" element={<DomiciliosLanding/>}/>
                   <Route path="/domiciliosTarifas" element={<DomicilioTarifaListado/>}/>
+                  <Route path="/domicilioslega" element={<DomiciliosLegalizar/>}/>
                   
                   </>
                 }                
@@ -146,6 +148,7 @@ export default function App(){
                 <Route path="/movimientos" element={<MovimientosLanding/>}/>
                 <Route path="/domicilios" element={<DomiciliosLanding/>}/>
                 <Route path="/domiciliosTarifas" element={<DomicilioTarifaListado/>}/>
+                <Route path="/domicilioslega" element={<DomiciliosLegalizar/>}/>
               </Route>               
 
                         

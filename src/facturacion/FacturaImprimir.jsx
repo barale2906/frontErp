@@ -2,12 +2,14 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import ReactToPrint from "react-to-print";
 import url from "../utils/urlimport";
+import tope from "../utils/monto";
 
 export default function FacturaImprimir({facturad}){
 
     const [basicos, setBasicos]=useState()
     const [detalles, setDetalles]=useState()
     const [medio, setMedio] =useState()
+    const [total, setTotal]=useState(facturad.totalFactura)
 
     const axiosBasicos=async()=>{
         const rutain=url+"basicos/1"       
@@ -38,19 +40,24 @@ export default function FacturaImprimir({facturad}){
 
     const axiosMedio=async()=>{
 
-        const rutamedio=url+"medioPago/"+facturad.medioId
-        console.log("medio", rutamedio)
-        
+        const rutamedio=url+"medioPago/"+facturad.medioId       
 
         axios.get(rutamedio)
         .then((res)=>{
             setMedio(res.data)
-            console.log("Medio pago: ",res.data)
         })
         .catch((error)=>{
             console.log(error)
         })
 
+    }
+
+    const totalizar=()=>{
+        if(facturad.domiTarifa>0 && facturad.totalFactura<=tope){
+            const valor=facturad.domiTarifa+facturad.totalFactura
+            console.log("total domi: ",valor)
+            setTotal(valor)
+        }
     }
 
     const ref = useRef()
@@ -59,9 +66,8 @@ export default function FacturaImprimir({facturad}){
         axiosBasicos()
         axiosProductos()
         axiosMedio()
+        totalizar()
     },[facturad])
-
-
     
     if(basicos && facturad && detalles && medio)
     return(
@@ -137,7 +143,15 @@ export default function FacturaImprimir({facturad}){
                         <tr>
                             <td colSpan="5"><h5 align="right"><strong>Total Registro</strong></h5></td>
                             <td><h5 align="right">{"$ "+ new Intl.NumberFormat().format(facturad.totalFactura)}</h5></td>
-                        </tr>                        
+                        </tr> 
+                        <tr>
+                            <td colSpan="5"><h5 align="right"><strong>Valor Domicilio</strong></h5></td>
+                            <td><h5 align="right">{"$ "+ new Intl.NumberFormat().format(facturad.domiTarifa)}</h5></td>
+                        </tr>
+                        <tr>
+                            <td colSpan="5"><h5 align="right"><strong>Total Incluido Domicilio</strong></h5></td>
+                            <td><h5 align="right">{"$ "+ new Intl.NumberFormat().format(total)}</h5></td>
+                        </tr>                         
                     </tbody>
                 </table>
                 <hr />

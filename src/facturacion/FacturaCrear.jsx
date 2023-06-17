@@ -59,20 +59,8 @@ export default function FacturaCrear({setGenFactura, setLastFactura, setPinFact}
         if(comi!=="0"){
             aplicaComi(data.id)
         }
-
-        Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: `Haz creado la Factura N°: <strong>${data.id}</strong> al cliente: <strong>${data.name}</strong>`,
-            showConfirmButton: false,
-            timer: 1500 
-        })
-
-        setGenFactura(data.id)
-        setLastFactura(data)
-        apliDomi(data.id)
-        sessionStorage.clear()
-        setPinFact()
+        
+        apliDomi(data.id)      
     }
 
     
@@ -237,13 +225,21 @@ export default function FacturaCrear({setGenFactura, setLastFactura, setPinFact}
             "domiTarifa":domi.tarifa
         }
 
-        axios.put(rutaUpdate, domici)
+        await axios.put(rutaUpdate, domici)
         .then((response) =>{
-            if(response.status ===201){
-                //console.log("Carga Domicilio: ",response.data)
-            }else{
-                
-            }
+            //console.log("Carga Domicilio: ",response.data)    
+            setGenFactura(response.data.id)
+            setLastFactura(response.data)
+            sessionStorage.clear()
+            setPinFact()
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: `Haz creado la Factura N°: <strong>${response.data.id}</strong> al cliente: <strong>${response.data.name}</strong>`,
+                showConfirmButton: false,
+                timer: 1500 
+            })                    
+            
         })
         
         if(aplicaDomi!=="0"){
@@ -256,7 +252,7 @@ export default function FacturaCrear({setGenFactura, setLastFactura, setPinFact}
                 "factId":id,
                 "domiTarifaId":domi.id
             }
-            axios.post(domiruta, domicil)
+            await axios.post(domiruta, domicil)
             .then((response) =>{
                 if(response.status ===201){
                     //console.log("Programa Domicilio: ",response.data)
