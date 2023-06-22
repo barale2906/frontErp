@@ -8,6 +8,7 @@ import ComisionesCrear from "./ComisionesCrear";
 import ComisionesDetalle from "./ComisionesDetalle";
 import ComisionesEditar from "./ComisionesEditar";
 import axios from "axios";
+import { NavLink } from "react-router-dom";
 
 export default function ComisionesListado(){
 
@@ -72,10 +73,13 @@ export default function ComisionesListado(){
             <>
             <AlertaContext.Provider value={()=>[axiosComisiones()]}>
                 <div className="row">                
-                    <div className="container text-center alert alert-primary col-sm-4 mt-4" role="alert"> 
-                        <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Crear Comisión
-                        </button>                            
+                    <div className="container text-center alert alert-primary col-sm-4 mt-4" role="alert">                         
+                        <div className="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Crear Comisión
+                            </button>
+                            <NavLink to="/comisionescalculo"><button type="button" className="btn btn-info">Calcular Comisiones</button></NavLink>                            
+                        </div>                            
                         <div className="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div className="modal-dialog">
                                 <div className="modal-content">
