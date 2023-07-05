@@ -39,6 +39,12 @@ export default function DomiciliosDetalle ({domicilio, setEditDomicilio, setDomi
                             :
                             <></>
                         }
+                        {
+                            domicilio.status===4 ?
+                                <p>CERRADO</p>
+                            :
+                            <></>
+                        }
                     </div>
                 </td>
             </tr>
