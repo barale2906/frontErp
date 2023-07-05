@@ -53,7 +53,7 @@ export default function CierreCaja(){
         const urlu=url+"user/"+id
         await axios.get(urlu)
         .then((res)=>{        
-            setUsuariod(res.data);              
+            setUsuariod(res.data[0]);         
         })
         .catch((error)=>{
             console.log(error)
@@ -187,8 +187,7 @@ export default function CierreCaja(){
             if (result.isConfirmed) {
 
                 //Obtener saldo de la bodega 
-                const rutasaldo=url+"efectivo/"+usuariod.bodega
-
+                const rutasaldo=url+"efectivo/"+usuariod.bodega                
                 axios.get(rutasaldo)
                     .then((res)=>{ 
                         
